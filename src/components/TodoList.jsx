@@ -1,95 +1,80 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useState } from "react";
-import { create, done, remove, update } from "../store/module/todo";
+import { useState, useRef, useEffect } from "react";
+import { isChecked, remove, update } from "../store/module/todo";
 
 export default function TodoList() {
   const list = useSelector((state) => state.todo.list);
-  const todoList = list.filter((todo) => !todo.done);
+  const todoList = list.filter((todo) => !todo.isChecked);
   const dispatch = useDispatch();
-  const todoRefs = useRef([]);
-
-  const nextID = useSelector((state) => state.todo.nextID);
 
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editingText, setEditingText] = useState("");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (editingTodoId !== null && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editingTodoId]);
 
   return (
-    <section className="TodoList">
-      <h2>오늘 할 일</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Todo"
-          ref={(el) => (todoRefs.current[nextID] = el)}
-        />
-        <button
-          onClick={() => {
-            dispatch(
-              create({ id: nextID, text: todoRefs.current[nextID].value })
-            );
-            todoRefs.current[nextID].value = "";
-          }}
-        >
-          추가
-        </button>
-      </div>
-      <ul>
-        {todoList.map((todo) => {
-          return (
-            <li key={todo.id}>
+    <>
+      {todoList.map((todo) => (
+        <div className="todoContainer" key={todo.id} data-id={todo.id}>
+          <div className="todoSection1">
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={todo.isChecked}
+              onChange={() => {
+                dispatch(isChecked(todo.id));
+              }}
+            />
+          </div>
+          <div className="todoSection2">
+            {editingTodoId === todo.id ? (
               <input
-                type="checkbox"
-                checked={todo.done}
-                onChange={() => {
-                  dispatch(done(todo.id));
-                }}
+                type="text"
+                className="todo"
+                value={editingText}
+                ref={inputRef}
+                onChange={(e) => setEditingText(e.target.value)}
               />
-              {editingTodoId === todo.id ? (
-                <input
-                  type="text"
-                  value={editingText}
-                  onChange={(e) => setEditingText(e.target.value)}
-                />
-              ) : (
-                <span>{todo.text}</span>
-              )}
-              {editingTodoId !== todo.id ? (
-                <button
-                  onClick={() => {
-                    setEditingTodoId(todo.id);
-                    setEditingText(todo.text);
-                  }}
-                >
-                  수정
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    dispatch(update(todo.id, { text: editingText }));
-                    setEditingTodoId(null);
-                  }}
-                >
-                  확인
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  dispatch(done(todo.id));
-                }}
+            ) : (
+              <input
+                type="text"
+                className="todo"
+                value={todo.text}
+                disabled
+              />
+            )}
+            {!todo.isChecked && (
+            <button
+              className="updateButton"
+              onClick={() => {
+                if (editingTodoId === todo.id) {
+                  dispatch(update(todo.id, { text: editingText }));  // Fixed here
+                  setEditingTodoId(null);
+                } else {
+                  setEditingTodoId(todo.id);
+                  setEditingText(todo.text);
+                }
+              }}
               >
-                완료
-              </button>
-              <button
-                onClick={() => {
-                  dispatch(remove(todo.id));
-                }}
-              >
-                삭제
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+              {editingTodoId === todo.id ? "저장" : "수정"}
+            </button>
+            )}
+            <button
+              className="deleteButton"
+              onClick={() => {
+                dispatch(remove(todo.id));
+              }}
+            >
+              삭제
+            </button>
+          </div>
+        </div>
+      ))}
+    </>
   );
 }
