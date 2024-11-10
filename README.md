@@ -67,12 +67,11 @@ $ npm run start
 react_Redux_TodoList_6
 ├── public
 ├── src
-│   └── components
-│       ├── CreateTodo.jsx
-│       ├── DoneList.jsx
-│       ├── ListContainer.jsx
-│       └── TodoList.jsx
-├── src
+│   ├── components
+│   │   ├── CreateTodo.jsx
+│   │   ├── DoneList.jsx
+│   │   ├── ListContainer.jsx
+│   │   └── TodoList.jsx
 │   ├── store
 │   │   │└── module
 │   │   └── index.js
