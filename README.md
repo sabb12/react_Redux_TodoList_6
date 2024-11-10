@@ -33,8 +33,7 @@
 ## Installation(설치)
 ```
 $ npx create-react-app react_Redux_TodoList_5
-$ npm init -y
-$ npm install
+$ cd react_Redux_TodoList_5
 $ npm install redux react-redux @reduxjs/toolkit
 $ npm install sass
 $ npm run start
