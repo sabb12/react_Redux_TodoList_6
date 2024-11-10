@@ -1,5 +1,5 @@
 ## Project Introduction(프로젝트 소개)
-##### ▪ react와 redux를 사용해 로 만든 To Do List
+##### ▪ react와 redux를 사용해 만든 To Do List
 <br/>
 
 ## What I've learned(배운 점)
