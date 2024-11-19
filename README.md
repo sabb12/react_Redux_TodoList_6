@@ -63,7 +63,7 @@ $ npm run start
 
 ## Project Structure(프로젝트 구조)
 ```markdown
-react_Redux_TodoList_6
+react_Redux_TodoList_5
 ├── public
 ├── src
 │   ├── components
